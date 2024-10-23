@@ -1,0 +1,12 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Create a post{% endblock %}
+
+{% block content %}
+    {% if post %}
+        <h2>Your post has been added.</h2>
+        <p><a href="/">Back to the main paige</a></p>
+    {% else %}
+        {% include "blog/post/includes/create_post.html" %}
+    {% endif %}
+{% endblock %}

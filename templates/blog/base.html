@@ -59,6 +59,9 @@
                 <div class="card-header">This is my blog.</div>
                 <div class="card-body">
                     Total posts {% total_posts %} so far.
+                    {% if user.is_authenticated %}
+                        <p><a href="{% url 'blog:create_post' %}">Create a new post</a></p>
+                    {% endif %}
                 </div>
             </div>
             <!-- Search widget-->

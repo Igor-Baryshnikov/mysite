@@ -2,11 +2,12 @@ from django.conf import settings
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.core.mail import send_mail
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from pytils.translit import slugify
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 from taggit.models import Tag
 
-from .forms import EmailPostForm, CommentForm, SearchForm
+from .forms import EmailPostForm, CommentForm, SearchForm, PostForm
 from .models import Post
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count
@@ -147,3 +148,16 @@ def post_search(request):
                   {'form': form,
                    'query': query,
                    'results': results})
+
+
+def create_post(request):
+    form = PostForm(data=request.POST)
+    post = None
+    if form.is_valid():
+        post = form.save(commit=False)
+        post.author = request.user
+        post.slug = slugify(post.title)
+        post.save()
+    return render(request,
+                  "blog/post/post.html",
+                  {'form': form, "post": post})

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Comment
+from .models import Comment, Post
 
 
 class EmailPostForm(forms.Form):
@@ -8,6 +8,16 @@ class EmailPostForm(forms.Form):
     to = forms.EmailField(required=True, widget=forms.TextInput(attrs={"class": "form-control mb-1", 'placeholder': 'To'}))
     comments = forms.CharField(required=False,
                                widget=forms.Textarea(attrs={"class": "form-control mb-1", 'placeholder': 'Comments'}))
+
+
+class PostForm(forms.ModelForm):
+    title = forms.CharField(max_length=255,  widget=forms.TextInput(attrs={"class": "form-control mb-1", 'placeholder': 'Title'}))
+    body = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control mb-1", 'placeholder': 'Body'}))
+    status = forms.ChoiceField(choices=(('DF', 'Draft'), ('PB', 'Published')),)
+
+    class Meta:
+        model = Post
+        fields = ["title", "body", "status",]
 
 
 class CommentForm(forms.ModelForm):
