@@ -12,12 +12,19 @@ class EmailPostForm(forms.Form):
 
 class PostForm(forms.ModelForm):
     title = forms.CharField(max_length=255,  widget=forms.TextInput(attrs={"class": "form-control mb-1", 'placeholder': 'Title'}))
-    body = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control mb-1", 'placeholder': 'Body'}))
+    body = forms.CharField(required=False, widget=forms.TextInput(attrs={"class": "form-control mb-1", 'placeholder': 'Body'}))
     status = forms.ChoiceField(choices=(('DF', 'Draft'), ('PB', 'Published')),)
+    tags = forms.CharField(required=False, widget=forms.TextInput(attrs={"class": "form-control mb-1", 'placeholder': 'Tags separated with commas'}))
 
     class Meta:
         model = Post
-        fields = ["title", "body", "status",]
+        fields = ["title", "body", "status", 'tags']
+
+    def clean_tags(self):
+        tags = self.cleaned_data.get('tags')
+        if tags:
+            return [tag.strip() for tag in tags.split(',')]
+        return []
 
 
 class CommentForm(forms.ModelForm):

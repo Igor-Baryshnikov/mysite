@@ -158,6 +158,9 @@ def create_post(request):
         post.author = request.user
         post.slug = slugify(post.title)
         post.save()
+        tags = form.cleaned_data.get('tags')
+        if tags:
+            post.tags.set(tags)
     return render(request,
                   "blog/post/post.html",
                   {'form': form, "post": post})
