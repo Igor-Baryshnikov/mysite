@@ -6,6 +6,7 @@ from django.views import generic
 from .forms import SignUpForm, LoginForm, UpdateUserForm, UpdateProfileForm
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from rest_framework.authtoken.models import Token
 
 
 class SignUpView(generic.CreateView):

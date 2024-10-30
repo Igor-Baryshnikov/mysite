@@ -11,6 +11,7 @@ from .forms import EmailPostForm, CommentForm, SearchForm, PostForm
 from .models import Post
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count
+from transliterate import translit
 
 
 class PostListView(ListView):
@@ -160,7 +161,10 @@ def create_post(request):
         post.save()
         tags = form.cleaned_data.get('tags')
         if tags:
-            post.tags.set(tags)
+            t = []
+            for tag in tags:
+                t.append(translit(tag, 'ru', reversed=True))
+            post.tags.set(t)
     return render(request,
                   "blog/post/post.html",
                   {'form': form, "post": post})
