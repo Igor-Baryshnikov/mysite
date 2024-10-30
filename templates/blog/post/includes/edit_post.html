@@ -1,8 +1,8 @@
-    <form action="{% url 'blog:create_post' %}" method="post">
+    <form action="{% url 'blog:post_edit' post.id %}" method="post">
     {% csrf_token %}
    {% if user.is_authenticated %}
     <div class="row">
-        <h3>Create a new post</h3>
+        <h3>Edit post</h3>
         <div class="mt-2">
             {{ form.title }}
         </div>
@@ -10,11 +10,7 @@
             {{ form.body }}
         </div>
         <div class="mt-2">
-            {{ form.tags }}
-        </div>
-        <div class="mt-2">
-            {{ form.status }}
-            <input type="submit" class="btn btn-primary mb-3" value="Create post">
+            <input type="submit" class="btn btn-primary mb-3" value="Edit post">
         </div>
     </div>
     {% else %}

@@ -42,3 +42,14 @@ class CommentForm(forms.ModelForm):
 class SearchForm(forms.Form):
     query = forms.CharField(
         widget=forms.TextInput(attrs={"class": "form-control mb-1", 'placeholder': 'Enter search term...'}))
+
+
+class UpdatePostForm(forms.ModelForm):
+    title = forms.CharField(max_length=255,
+                            widget=forms.TextInput(attrs={"class": "form-control mb-1", 'placeholder': 'Title'}))
+    body = forms.CharField(required=False,
+                           widget=forms.TextInput(attrs={"class": "form-control mb-1", 'placeholder': 'Body'}))
+
+    class Meta:
+        model = Post
+        fields = ["title", "body"]

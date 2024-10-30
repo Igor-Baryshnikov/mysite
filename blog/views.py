@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 from taggit.models import Tag
 
-from .forms import EmailPostForm, CommentForm, SearchForm, PostForm
+from .forms import EmailPostForm, CommentForm, SearchForm, PostForm, UpdatePostForm
 from .models import Post
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count
@@ -168,3 +168,22 @@ def create_post(request):
     return render(request,
                   "blog/post/post.html",
                   {'form': form, "post": post})
+
+
+def delete_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+    post.delete()
+    return render(request, 'blog/post/delete_post.html')
+
+
+def edit_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+    form = UpdatePostForm(data=request.POST)
+    flag = False
+    if form.is_valid():
+        post.title = form.cleaned_data['title']
+        post.body = form.cleaned_data['body']
+        post.slug = slugify(post.title)
+        post.save()
+        flag = True
+    return render(request, "blog/post/edit_post.html", {'form': form, "post": post, "flag": flag})

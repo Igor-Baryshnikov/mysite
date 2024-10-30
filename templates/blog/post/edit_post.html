@@ -1,0 +1,12 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Edit a post{% endblock %}
+
+{% block content %}
+    {% if flag %}
+        <h2>Your post has been edited.</h2>
+        <p><a href="/">Back to the main paige</a></p>
+    {% else %}
+        {% include "blog/post/includes/edit_post.html" %}
+    {% endif %}
+{% endblock %}
