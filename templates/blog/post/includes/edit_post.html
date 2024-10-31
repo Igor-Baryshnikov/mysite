@@ -9,10 +9,15 @@
         <div class="mt-2">
             {{ form.body }}
         </div>
+    </div>
+        {% if post.status != "PB" %}
+            <div class="mt-2">
+            {{ form.status }}
+            </div>
+        {% endif %}
         <div class="mt-2">
             <input type="submit" class="btn btn-primary mb-3" value="Edit post">
         </div>
-    </div>
     {% else %}
         <h3>Firstly you need to <a href="{% url 'login' %}">log in</a></h3>
     {% endif %}

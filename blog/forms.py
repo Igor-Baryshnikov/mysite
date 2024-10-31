@@ -49,7 +49,8 @@ class UpdatePostForm(forms.ModelForm):
                             widget=forms.TextInput(attrs={"class": "form-control mb-1", 'placeholder': 'Title'}))
     body = forms.CharField(required=False,
                            widget=forms.TextInput(attrs={"class": "form-control mb-1", 'placeholder': 'Body'}))
+    status = forms.ChoiceField(choices=(('DF', 'Draft'), ('PB', 'Published')))
 
     class Meta:
         model = Post
-        fields = ["title", "body"]
+        fields = ["title", "body", "status"]

@@ -12,6 +12,8 @@ urlpatterns = [
          name='post_detail'),
     path('<int:post_id>/share/',
          views.post_share, name='post_share'),
+    path('drafted/<int:user_id>/', views.drafted_post, name='show_posts'),
+    path('publish/<int:post_id>/', views.publish_post, name='post_publish'),
     path('<int:post_id>/delete/',
          views.delete_post, name='post_delete'),
     path('<int:post_id>/edit/',

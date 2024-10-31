@@ -9,7 +9,7 @@ from taggit.models import Tag
 
 from .forms import EmailPostForm, CommentForm, SearchForm, PostForm, UpdatePostForm
 from .models import Post
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Count
 from transliterate import translit
 
@@ -82,7 +82,6 @@ def post_share(request, post_id):
 
 def post_detail(request, year, month, day, post):
     post = get_object_or_404(Post,
-                             status=Post.Status.PUBLISHED,
                              slug=post,
                              publish__year=year,
                              publish__month=month,
@@ -184,6 +183,40 @@ def edit_post(request, post_id):
         post.title = form.cleaned_data['title']
         post.body = form.cleaned_data['body']
         post.slug = slugify(post.title)
+        post.status = form.cleaned_data['status']
         post.save()
         flag = True
     return render(request, "blog/post/edit_post.html", {'form': form, "post": post, "flag": flag})
+
+
+def drafted_post(request, user_id, tag_slug=None):
+    post_list = Post.drafted.filter(author=user_id)
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        post_list = post_list.filter(tags__in=[tag])
+
+    # Постраничная разбивка с 3 постами на страницу
+    paginator = Paginator(post_list, 3)
+    page_number = request.GET.get('page', 1)
+    try:
+        posts = paginator.page(page_number)
+    except PageNotAnInteger:
+        # Если page_number не целое число, то
+        # выдать первую страницу
+        posts = paginator.page(1)
+    except EmptyPage:
+        # Если page_number находится вне диапазона, то
+        # выдать последнюю страницу результатов
+        posts = paginator.page(paginator.num_pages)
+    return render(request,
+                  'blog/post/list.html',
+                  {'posts': posts,
+                   'tag': tag})
+
+
+def publish_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+    post.status = Post.Status.PUBLISHED
+    post.save()
+    return redirect("/")
